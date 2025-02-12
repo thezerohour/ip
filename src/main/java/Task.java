@@ -8,10 +8,14 @@ public class Task {
     }
 
     public String getStatusIcon() {
-        return (isDone ? "X" : " ");
+        return (isDone ? "[X]" : "[ ]");
     }
 
     public void setDone(boolean done) {
         isDone = done;
+    }
+
+    public String toString() {
+        return getStatusIcon() + " " + description;
     }
 }
