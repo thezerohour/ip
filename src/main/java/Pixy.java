@@ -20,36 +20,28 @@ public class Pixy {
             input = in.nextLine();
             command = input.trim().split(" ")[0];
             switch (command) {
-            case "list" -> {
-                printList(tasksCounter, tasks);
-            }
-            case "unmark" -> {
-                unmarkTask(input, tasks);
-            }
-            case "mark" -> {
-                markTask(input, tasks);
-            }
+            case "list" -> printList(tasksCounter, tasks);
+            case "unmark" -> unmarkTask(input, tasks);
+            case "mark" -> markTask(input, tasks);
             default -> {
                 switch (command) {
-                    case "todo" -> {
-                        String description = input.substring(input.indexOf(" ") + 1);
-                        tasks[tasksCounter] = new Todo(description);
-                        tasksCounter++;
-                    }
-                    case "deadline" -> {
-                        String[] deadlineTask = input.substring(9).split(" /by ", 2);
-                        tasks[tasksCounter] = new Deadline(deadlineTask[0], deadlineTask[1]);
-                        tasksCounter++;
-                    }
-                    case "event" -> {
-                        String[] eventTask = input.substring(6).split(" /from ", 2);
-                        String[] eventTime = eventTask[1].split(" /to ", 2);
-                        tasks[tasksCounter] = new Event(eventTask[0], eventTime[0], eventTime[1]);
-                        tasksCounter++;
-                    }
-                    default -> {
-                        System.out.println("not a command!");
-                    }
+                case "todo" -> {
+                    String description = input.substring(input.indexOf(" ") + 1);
+                    tasks[tasksCounter] = new Todo(description);
+                    tasksCounter++;
+                }
+                case "deadline" -> {
+                    String[] deadlineTask = input.substring(9).split(" /by ", 2);
+                    tasks[tasksCounter] = new Deadline(deadlineTask[0], deadlineTask[1]);
+                    tasksCounter++;
+                }
+                case "event" -> {
+                    String[] eventTask = input.substring(6).split(" /from ", 2);
+                    String[] eventTime = eventTask[1].split(" /to ", 2);
+                    tasks[tasksCounter] = new Event(eventTask[0], eventTime[0], eventTime[1]);
+                    tasksCounter++;
+                }
+                default -> System.out.println("not a command!");
                 }
             }
             }
