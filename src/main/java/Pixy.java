@@ -1,72 +1,94 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-// single level of abstraction to be implemented
 
 public class Pixy {
 
-    // Message Repo
     private static final String MESSAGE_HELLO = "Hello! I'm Pixy\nWhat can I do for you?";
+    private static final String MESSAGE_EMPTY_DESCRIPTION = "empty description >:(";
+    private static final String MESSAGE_INVALID_TIME = "invalid time >:(";
+    private static final String MESSAGE_INVALID_NUMBER = "invalid number..?";
+    private static final List<Task> tasks = new ArrayList<>();
+    private static boolean isRunning = true;
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        Task[] tasks = new Task[100];
 
         System.out.println(MESSAGE_HELLO);
-        String input = in.nextLine();
-        String command = input.trim().split(" ")[0];
-        int tasksCounter = 0;
 
-        while (!command.equals("bye")) {
-            input = in.nextLine();
-            command = input.trim().split(" ")[0];
-            switch (command) {
-            case "list" -> printList(tasksCounter, tasks);
-            case "unmark" -> unmarkTask(input, tasks);
-            case "mark" -> markTask(input, tasks);
-            default -> {
+        while (isRunning) {
+            try {
+                String input = in.nextLine();
+                String command = input.trim().split(" ")[0];
                 switch (command) {
-                case "todo" -> {
-                    String description = input.substring(input.indexOf(" ") + 1);
-                    tasks[tasksCounter] = new Todo(description);
-                    tasksCounter++;
+                case "list" -> printList();
+                case "unmark" -> unmarkTask(input);
+                case "mark" -> markTask(input);
+                case "todo" -> addTodo(input);
+                case "deadline" -> addDeadline(input);
+                case "event" -> addEvent(input);
+                case "bye" -> isRunning = false;
+                default -> invalidCommand();
                 }
-                case "deadline" -> {
-                    String[] deadlineTask = input.substring(9).split(" /by ", 2);
-                    tasks[tasksCounter] = new Deadline(deadlineTask[0], deadlineTask[1]);
-                    tasksCounter++;
-                }
-                case "event" -> {
-                    String[] eventTask = input.substring(6).split(" /from ", 2);
-                    String[] eventTime = eventTask[1].split(" /to ", 2);
-                    tasks[tasksCounter] = new Event(eventTask[0], eventTime[0], eventTime[1]);
-                    tasksCounter++;
-                }
-                default -> System.out.println("not a command!");
-                }
-            }
+            } catch (PixyException e) {
+                System.out.println(e.getMessage());
+            } catch (NumberFormatException e) {
+                System.out.println(MESSAGE_INVALID_NUMBER);
             }
         }
         System.out.println("Bye. Hope to see you again soon!");
     }
 
-    private static void markTask(String input, Task[] tasks) {
+    private static void invalidCommand() {
+        System.out.println("not a command!");
+    }
+
+    private static void addEvent(String input) throws PixyException {
+        if (!input.contains(" /from ") || !input.contains(" /to ")) {
+            throw new PixyException(MESSAGE_INVALID_TIME);
+        }
+        String[] eventTask = input.substring(6).split(" /from ", 2);
+        String[] eventTime = eventTask[1].split(" /to ", 2);
+        tasks.add(new Event(eventTask[0], eventTime[0], eventTime[1]));
+    }
+
+    private static void addDeadline(String input) throws PixyException {
+        if (!input.contains(" /by ")) {
+            throw new PixyException(MESSAGE_INVALID_TIME);
+        }
+        String[] deadlineTask = input.substring(9).split(" /by ", 2);
+        tasks.add(new Deadline(deadlineTask[0], deadlineTask[1]));
+    }
+
+    private static void addTodo(String input) throws PixyException {
+        String description = input.substring(input.indexOf(" ") + 1);
+        if (description.isBlank()) {
+            throw new PixyException(MESSAGE_EMPTY_DESCRIPTION);
+        }
+        tasks.add(new Todo(description));
+    }
+
+    private static void markTask(String input) {
         int taskIndex = Integer.parseInt(input.substring(5));
-        tasks[taskIndex - 1].setDone(true);
+        Task task = tasks.get(taskIndex - 1);
+        task.setDone(true);
         System.out.println("Nice! I've marked this task as done:");
-        System.out.println(tasks[taskIndex - 1].toString());
+        System.out.println(task);
     }
 
-    private static void unmarkTask(String input, Task[] tasks) {
+    private static void unmarkTask(String input) {
         int taskIndex = Integer.parseInt(input.substring(7));
-        tasks[taskIndex - 1].setDone(false);
+        Task task = tasks.get(taskIndex - 1);
+        task.setDone(false);
         System.out.println("OK, I've marked this task as not done yet:");
-        System.out.println(tasks[taskIndex - 1].toString());
+        System.out.println(task);
     }
 
-    private static void printList(int tasksCounter, Task[] tasks) {
+    private static void printList() {
         System.out.println("Here are the tasks in your list:");
-        for (int i = 0; i < tasksCounter; i++) {
-            System.out.println(tasks[i].toString());
+        for (Task task : tasks) {
+            System.out.println(task.toString());
         }
     }
 }
