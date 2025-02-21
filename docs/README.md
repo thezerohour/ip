@@ -1,4 +1,4 @@
-# Pixy User Guide
+# pixy.ui.Pixy User Guide
 
 // Update the title above to match the actual product name
 

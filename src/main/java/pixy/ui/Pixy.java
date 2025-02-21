@@ -1,7 +1,13 @@
+package pixy.ui;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import pixy.task.Deadline;
+import pixy.task.Event;
+import pixy.task.Task;
+import pixy.task.Todo;
 
 public class Pixy {
 
