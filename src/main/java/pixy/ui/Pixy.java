@@ -31,6 +31,7 @@ public class Pixy {
                 case "list" -> printList();
                 case "unmark" -> unmarkTask(input);
                 case "mark" -> markTask(input);
+                case "delete" -> deleteTask(input);
                 case "todo" -> addTodo(input);
                 case "deadline" -> addDeadline(input);
                 case "event" -> addEvent(input);
@@ -44,6 +45,13 @@ public class Pixy {
             }
         }
         System.out.println("Bye. Hope to see you again soon!");
+    }
+
+    private static void deleteTask(String input) {
+        int taskIndex = Integer.parseInt(input.substring(7));
+        Task task = tasks.remove(taskIndex - 1);
+        System.out.println("Noted. I've removed this task:");
+        System.out.println(task);
     }
 
     private static void invalidCommand() {
