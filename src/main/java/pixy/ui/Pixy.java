@@ -124,9 +124,7 @@ public class Pixy {
     private static void saveTasksToFile() {
         try {
             File file = new File(FILE_PATH);
-            if (!file.getParentFile().mkdirs()) {
-                System.out.println("Couldn't create directory " + FILE_PATH);
-            } // Create directories if they do not exist
+            file.getParentFile().mkdirs(); // Create directories if they do not exist
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
                 for (Task task : tasks) {
                     writer.write(task.toFileFormat());
