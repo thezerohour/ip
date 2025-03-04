@@ -1,5 +1,11 @@
 package pixy.ui;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -15,11 +21,14 @@ public class Pixy {
     private static final String MESSAGE_EMPTY_DESCRIPTION = "empty description >:(";
     private static final String MESSAGE_INVALID_TIME = "invalid time >:(";
     private static final String MESSAGE_INVALID_NUMBER = "invalid number..?";
+    private static final String FILE_PATH = "./data/pixy.txt";
     private static final List<Task> tasks = new ArrayList<>();
     private static boolean isRunning = true;
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
+
+        loadTasksFromFile();
 
         System.out.println(MESSAGE_HELLO);
 
@@ -45,6 +54,7 @@ public class Pixy {
             }
         }
         System.out.println("Bye. Hope to see you again soon!");
+        saveTasksToFile();
     }
 
     private static void deleteTask(String input) {
@@ -65,6 +75,7 @@ public class Pixy {
         String[] eventTask = input.substring(6).split(" /from ", 2);
         String[] eventTime = eventTask[1].split(" /to ", 2);
         tasks.add(new Event(eventTask[0], eventTime[0], eventTime[1]));
+        saveTasksToFile();
     }
 
     private static void addDeadline(String input) throws PixyException {
@@ -73,6 +84,7 @@ public class Pixy {
         }
         String[] deadlineTask = input.substring(9).split(" /by ", 2);
         tasks.add(new Deadline(deadlineTask[0], deadlineTask[1]));
+        saveTasksToFile();
     }
 
     private static void addTodo(String input) throws PixyException {
@@ -81,6 +93,7 @@ public class Pixy {
             throw new PixyException(MESSAGE_EMPTY_DESCRIPTION);
         }
         tasks.add(new Todo(description));
+        saveTasksToFile();
     }
 
     private static void markTask(String input) {
@@ -89,6 +102,7 @@ public class Pixy {
         task.setDone(true);
         System.out.println("Nice! I've marked this task as done:");
         System.out.println(task);
+        saveTasksToFile();
     }
 
     private static void unmarkTask(String input) {
@@ -97,12 +111,62 @@ public class Pixy {
         task.setDone(false);
         System.out.println("OK, I've marked this task as not done yet:");
         System.out.println(task);
+        saveTasksToFile();
     }
 
     private static void printList() {
         System.out.println("Here are the tasks in your list:");
         for (Task task : tasks) {
             System.out.println(task.toString());
+        }
+    }
+
+    private static void saveTasksToFile() {
+        try {
+            File file = new File(FILE_PATH);
+            if (!file.getParentFile().mkdirs()) {
+                System.out.println("Couldn't create directory " + FILE_PATH);
+            } // Create directories if they do not exist
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+                for (Task task : tasks) {
+                    writer.write(task.toFileFormat());
+                    writer.newLine();
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving tasks: " + e.getMessage());
+        }
+    }
+
+    private static void loadTasksFromFile() {
+        try {
+            File file = new File(FILE_PATH);
+            if (!file.exists()) {
+                return; // If the file does not exist, there's nothing to load
+            }
+            try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split(" \\| ");
+                    String type = parts[0];
+                    boolean isDone = parts[1].equals("1");
+                    String description = parts[2];
+                    switch (type) {
+                    case "T" -> tasks.add(new Todo(description, isDone));
+                    case "D" -> {
+                        String by = parts[3];
+                        tasks.add(new Deadline(description, by, isDone));
+                    }
+                    case "E" -> {
+                        String from = parts[3];
+                        String to = parts[4];
+                        tasks.add(new Event(description, from, to, isDone));
+                    }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while loading tasks: " + e.getMessage());
         }
     }
 }
