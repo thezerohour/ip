@@ -4,6 +4,10 @@ import pixy.parser.Parser;
 import pixy.storage.Storage;
 import pixy.task.TaskList;
 
+/**
+ * The `Pixy` class represents the main entry point for the Pixy application.
+ * It handles the user interface, task management, and file storage.
+ */
 public class Pixy {
 
     private static final String MESSAGE_INVALID_NUMBER = "invalid number..?";
