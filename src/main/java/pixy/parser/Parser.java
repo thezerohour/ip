@@ -20,6 +20,7 @@ public class Parser {
         case "todo" -> addTodo(input, taskList);
         case "deadline" -> addDeadline(input, taskList);
         case "event" -> addEvent(input, taskList);
+        case "find" -> findTasks(input, taskList);
         default -> invalidCommand();
         }
     }
@@ -71,5 +72,10 @@ public class Parser {
         taskList.markTask(taskIndex, false);
         System.out.println("OK, I've marked this task as not done yet:");
         System.out.println(taskList.getTask(taskIndex));
+    }
+
+    private static void findTasks(String input, TaskList taskList) {
+        String keyword = input.substring(5).trim();
+        taskList.searchTasks(keyword);
     }
 }
