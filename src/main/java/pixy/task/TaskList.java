@@ -75,4 +75,13 @@ public class TaskList {
             System.out.println(task.toString());
         }
     }
+
+    public void searchTasks(String keyword) {
+        System.out.println("Here are the matching tasks in your list:");
+        for (Task task : tasks) {
+            if (task.toString().contains(keyword)) {
+                System.out.println(task.toString());
+            }
+        }
+    }
 }
