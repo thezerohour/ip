@@ -12,6 +12,10 @@ import pixy.task.Todo;
 import pixy.task.Deadline;
 import pixy.task.Event;
 
+/**
+ * The `Storage` class is responsible for saving and loading tasks to/from a file.
+ * It provides methods to save a list of tasks to a specified file path and load tasks from an existing file.
+ */
 public class Storage {
     private final String filePath;
 
@@ -19,6 +23,11 @@ public class Storage {
         this.filePath = filePath;
     }
 
+    /**
+     * Saves the given list of tasks to a file.
+     *
+     * @param tasks The list of tasks to be saved.
+     */
     public void saveTasksToFile(List<Task> tasks) {
         try {
             File file = new File(filePath);
@@ -34,6 +43,11 @@ public class Storage {
         }
     }
 
+    /**
+     * Loads tasks from a file and adds them to the provided list of tasks.
+     *
+     * @param tasks The list of tasks to add the loaded tasks to.
+     */
     public void loadTasksFromFile(List<Task> tasks) {
         try {
             File file = new File(filePath);

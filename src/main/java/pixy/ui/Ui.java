@@ -2,6 +2,10 @@ package pixy.ui;
 
 import java.util.Scanner;
 
+/**
+ * The `Ui` class represents the user interface of the Pixy application.
+ * It provides methods for interacting with the user, displaying messages, and reading user input.
+ */
 public class Ui {
     private final Scanner scanner;
 
