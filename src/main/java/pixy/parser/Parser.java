@@ -123,6 +123,12 @@ public class Parser {
         System.out.println(taskList.getTask(taskIndex));
     }
 
+    /**
+     * Finds tasks in the given input and searches for them in the task list.
+     *
+     * @param input The input string containing the keyword to search for tasks.
+     * @param taskList The task list to search for tasks in.
+     */
     private static void findTasks(String input, TaskList taskList) {
         String keyword = input.substring(5).trim();
         taskList.searchTasks(keyword);

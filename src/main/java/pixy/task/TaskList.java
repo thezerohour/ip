@@ -76,6 +76,12 @@ public class TaskList {
         }
     }
 
+    /**
+     * Searches for tasks in the task list that contain the specified keyword.
+     * Prints the matching tasks to the console.
+     *
+     * @param keyword the keyword to search for
+     */
     public void searchTasks(String keyword) {
         System.out.println("Here are the matching tasks in your list:");
         for (Task task : tasks) {
